@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Dashboard - Travelista Tours</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #2984eb, #021a3a);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .dashboard-container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 30px;
+      width: 90%;
+      max-width: 600px;
+      margin-top: 60px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #fff;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin: 10px 0;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    }
+
+    .btn {
+      display: block;
+      width: 80%;
+      margin: 10px auto;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: rgba(255,255,255,0.4);
+    }
+
+    .logout-btn {
+      background: #ff4b4b;
+      font-weight: bold;
+    }
+
+    .logout-btn:hover {
+      background: #ff2a2a;
+    }
+
+    .login-btn {
+      background: #00c3ff;
+      font-weight: bold;
+    }
+
+    .login-btn:hover {
+      background: #009cd8;
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      color: #bbb;
+      font-size: 14px;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <img id="profilePic" class="profile-pic" src="images/profile.avif" alt="Profile Picture">
+    <h2 id="userName">Guest User</h2>
+
+    <button class="btn" onclick="window.location.href='/mybookings.html'">MyBooking</button>
+    <button class="btn" onclick="showTerms()">📜 Terms & Conditions</button>
+    <button class="btn" onclick="showAbout()">ℹ️ About</button>
+    <button class="btn" onclick="showSettings()">⚙️ Settings</button>
+    <button id="authBtn" class="btn login-btn" onclick="logoutUser()" >🔐 Login</button>
+  </div>
+
+  <footer>© 2025 Travelista Tours</footer>
+
+  <script>
+    const userName = document.getElementById("userName");
+    const authBtn = document.getElementById("authBtn");
+    const profilePic = document.getElementById("profilePic");
+
+    // ===========================
+    // Check login session
+    // ===========================
+    async function checkLogin() {
+      try {
+        const res = await fetch("http://localhost:5000/api/users/session", { credentials: "include" });
+        const data = await res.json();
+
+        if (data.loggedIn) {
+          userName.textContent = data.user.name || "Traveler";
+          profilePic.src = "images/profile.avif"; // You can replace with user's uploaded image
+          authBtn.textContent = "🚪 Logout";
+          authBtn.classList.remove("login-btn");
+          authBtn.classList.add("logout-btn");
+          authBtn.onclick = logoutUser;
+        } else {
+          userName.textContent = "Guest User";
+          authBtn.textContent = "🔐 Login";
+          authBtn.classList.remove("logout-btn");
+          authBtn.classList.add("login-btn");
+          authBtn.onclick = () => (window.location.href = "/login");
+        }
+      } catch (err) {
+        console.error("Error checking session:", err);
+      }
+    }
+
+    // ===========================
+    // Dummy functions
+    // ===========================
+    function showAbout() {
+      alert("🌍 Travelista Tours — Your trusted travel partner for exploring the world!");
+    }
+
+    function showTerms() {
+      alert("📜 Terms & Conditions: All bookings are subject to availability and company policies.");
+    }
+
+    function showSettings() {
+      alert("⚙️ Settings: This section will allow you to edit your preferences soon.");
+    }
+
+    // ===========================
+    // Logout Function
+    // ===========================
+    async function logoutUser() {
+      await fetch("http://localhost:5000/api/users/logout", { credentials: "include" });
+      localStorage.removeItem("userId");
+      window.location.reload();
+    }
+
+    // ===========================
+    // Initialize
+    // ===========================
+    checkLogin();
+  </script>
+</body>
+</html>

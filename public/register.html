@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+  }
+
+  body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top left, #a8e9ff, #0e1f40);
+    overflow: hidden;
+    position: relative;
+   
+  }
+
+  /* Animated background movement */
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(-45deg, #5ddcff, #3c67e3, #4e00c2, #00c9ff);
+    background-size: 400% 400%;
+    z-index: 0;
+    animation: moveBg 10s ease infinite;
+  }
+
+  @keyframes moveBg {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Frost overlay */
+  body::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    z-index: 1;
+  }
+
+  /* Container */
+  .container {
+    position: relative;
+    z-index: 5;
+    width: 360px;
+    padding: 45px 35px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 35px rgba(0, 200, 255, 0.3);
+    backdrop-filter: blur(20px);
+    text-align: center;
+    color: #e8faff;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .container:hover {
+    box-shadow: 0 0 45px rgba(0, 255, 255, 0.5);
+    transform: translateY(-4px);
+  }
+
+  /* Title */
+  h2 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #c3f5ff;
+    text-shadow: 0 0 10px rgba(0,255,255,0.5);
+  }
+
+  /* Inputs */
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: #eafaff;
+    outline: none;
+    font-size: 15px;
+    transition: all 0.3s;
+  }
+
+  input::placeholder {
+    color: #cbe8ff;
+  }
+
+  input:focus {
+    border-color: #00e5ff;
+    box-shadow: 0 0 12px rgba(0,229,255,0.4);
+  }
+
+  /* Button */
+  button {
+    background: linear-gradient(90deg, #00eaff, #0072ff);
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(0,255,255,0.6);
+  }
+
+  /* Text */
+  p {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #d8f9ff;
+  }
+
+  a {
+    color: #00e5ff;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* SCRATCH EFFECT FOLLOWING MOUSE */
+  .crystal {
+    position: absolute;
+    pointer-events: none;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    filter: blur(50px);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 2;
+  }
+
+  body:hover .crystal {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Floating Ice Particles */
+  @keyframes float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-20px); }
+  }
+</style>
+</head>
+<body>
+  <div class="crystal" id="crystal"></div>
+
+  <div class="container">
+    <h2>Account Register</h2>
+    <input type="text" id="name" placeholder="Full Name">
+    <input type="email" id="email" placeholder="Email Address">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="register()">Register</button>
+    <p>Already have an account? <a href="login.html">Login</a></p>
+  </div>
+
+  <script>
+    // Mouse-follow crystal glow
+    const crystal = document.getElementById("crystal");
+    document.addEventListener("mousemove", (e) => {
+      crystal.style.left = e.pageX - 75 + "px";
+      crystal.style.top = e.pageY - 75 + "px";
+    });
+
+    function register() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (!name || !email || !password) {
+        alert("Please fill all fields!");
+        return;
+      }
+
+      fetch('http://localhost:5000/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        if (data.message.toLowerCase().includes('success')) {
+          window.location.href = 'login.html';
+        }
+      })
+      .catch(err => alert('Error: ' + err));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Confirmation - Travelista Tours</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #2193b0, #6dd5ed);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* LEFT SIDE */
+    .left {
+      width: 45%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(15px);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 0 20px rgba(255,255,255,0.1);
+      z-index: 2;
+    }
+
+    .booking-container {
+      width: 80%;
+      max-width: 480px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      padding: 30px 25px;
+      backdrop-filter: blur(15px);
+      color: #fff;
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 { font-size: 32px; margin-bottom: 10px; color: #fff; text-shadow: 0 0 8px rgba(0,0,0,0.3); }
+    h2 { margin-bottom: 20px; color: #d8ecff; font-weight: 500; }
+
+    #package-details {
+      text-align: left;
+      background: rgba(255,255,255,0.2);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 10px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    button {
+      margin-top: 20px;
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: 0.3s;
+      width: 100%;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #0072ff, #00c6ff);
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    /* RIGHT SIDE SLIDER */
+    .right {
+      width: 55%;
+      height: 100vh;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      max-width: 85%;
+      max-height: 80%;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: scale(1.05);
+      transition: all 1.5s ease-in-out;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1);
+      z-index: 2;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      z-index: 1;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="left">
+    <div class="booking-container">
+      <h1>Travelista Tours</h1>
+      <h2>✈️ Booking Confirmation</h2>
+      <div id="package-details">Loading package details...</div>
+      <button onclick="confirmBooking()">Confirm Booking</button>
+    </div>
+  </div>
+
+  <div class="right" id="hero-slider">
+    <div class="overlay"></div>
+  </div>
+
+  <script>
+    const userId = localStorage.getItem('userId');
+    const params = new URLSearchParams(window.location.search);
+    const packageId = params.get('package_id') || params.get('package');
+
+    if (!userId) {
+      alert('Please login first.');
+      window.location.href = 'login.html';
+    }
+
+    let pkg; // make package accessible globally
+
+    // Fetch package details
+    fetch(`http://localhost:5000/api/packages/${packageId}`)
+      .then(res => res.json())
+      .then(data => {
+        pkg = data.package || data;
+        if (!pkg) throw new Error("Package not found");
+
+        document.getElementById('package-details').innerHTML = `
+          <h3>${pkg.title}</h3>
+          <p>${pkg.description}</p>
+          <p><strong>Duration:</strong> ${pkg.duration || 'N/A'}</p>
+          <p><strong>Location:</strong> ${pkg.location || 'Unknown'}</p>
+          <p><strong>💰 Price:</strong> ₹${pkg.price}</p>
+        `;
+
+        const slider = document.getElementById('hero-slider');
+        const images = [pkg.image1, pkg.image2, pkg.image3, pkg.image4, pkg.image5].filter(img => img);
+
+        images.forEach((img, i) => {
+          const image = document.createElement('img');
+          image.src = `images/${img}`;
+          image.className = 'slide';
+          if (i === 0) image.classList.add('active');
+          slider.appendChild(image);
+        });
+
+        // Auto-slide animation
+        let current = 0;
+        setInterval(() => {
+          const slides = document.querySelectorAll('.slide');
+          slides[current].classList.remove('active');
+          current = (current + 1) % slides.length;
+          slides[current].classList.add('active');
+        }, 4000);
+      })
+      .catch(err => {
+        document.getElementById('package-details').innerHTML =
+          "<p style='color:red;'>Error loading package details. Please try again later.</p>";
+        console.error(err);
+      });
+
+    // ✅ Confirm booking and redirect to payment with full data
+    function confirmBooking() {
+      fetch('http://localhost:5000/api/bookings/book', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ user_id: userId, package_id: packageId })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert('✅ Booking confirmed! Redirecting to payment...');
+        window.location.href = `payment.html?user_id=${userId}&package_id=${packageId}&price=${pkg.price}`;
+      })
+      .catch(err => alert('Error: ' + err));
+    }
+  </script>
+</body>
+</html>

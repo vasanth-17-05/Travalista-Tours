@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Bookings - Travelista Tours</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* 🌈 Animated Background */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(-45deg, #2984eb, #021a3a, #4e00c2, #00c9ff);
+      background-size: 400% 400%;
+      animation: gradientShift 12s ease infinite;
+      z-index: -1;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h2 {
+      margin-top: 60px;
+      font-size: 32px;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+    }
+
+    /* Search Bar */
+    .search-bar {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .search-bar input {
+      padding: 10px 15px;
+      width: 280px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .search-bar button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background: #00b7ff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .search-bar button:hover {
+      background: #0086c9;
+    }
+
+    /* Booking Cards */
+    #bookings {
+      width: 90%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding-bottom: 50px;
+    }
+
+    .booking-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: 0.3s;
+    }
+
+    .booking-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255,255,255,0.3);
+    }
+
+    .booking-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+
+    .status {
+      padding: 6px 12px;
+      border-radius: 10px;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    .paid {
+      background: rgba(0,255,128,0.2);
+      border: 1px solid rgba(0,255,128,0.4);
+      color: #a0ffca;
+    }
+
+    .pending {
+      background: rgba(255,255,0,0.15);
+      border: 1px solid rgba(255,255,0,0.4);
+      color: #fff6a0;
+    }
+
+    .error {
+      color: #ffd4d4;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🧳 My Bookings</h2>
+
+  <!-- 🔍 Search Bar -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search by location or title...">
+    <button id="searchBtn">Search</button>
+  </div>
+
+  <div id="bookings"><p>Loading your bookings...</p></div>
+  <div id="msg" class="error"></div>
+
+  <script>
+    const bookingsDiv = document.getElementById('bookings');
+    const msgDiv = document.getElementById('msg');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+
+    let allBookings = [];
+
+    // ===========================
+    // Fetch Bookings
+    // ===========================
+    async function fetchBookings() {
+      try {
+        let res = await fetch("http://localhost:5000/api/bookings/user", {
+          credentials: "include",
+          headers: { "Accept": "application/json" }
+        });
+
+        if (res.status === 401) {
+          const userId = localStorage.getItem("userId");
+          if (!userId) throw new Error("User not logged in");
+          res = await fetch(`http://localhost:5000/api/bookings/user/${encodeURIComponent(userId)}`);
+        }
+
+        if (!res.ok) throw new Error("Failed to fetch bookings");
+        const data = await res.json();
+        allBookings = data;
+        renderBookings(data);
+      } catch (err) {
+        console.error("❌ Error loading bookings:", err);
+        msgDiv.textContent = err.message || "Unable to load bookings.";
+        bookingsDiv.innerHTML = "<p style='font-size:18px;'>Unable to load bookings.</p>";
+      }
+    }
+
+    // ===========================
+    // Render Bookings
+    // ===========================
+    function renderBookings(data) {
+      bookingsDiv.innerHTML = "";
+      if (!Array.isArray(data) || data.length === 0) {
+        bookingsDiv.innerHTML = "<p style='font-size:18px;'>You have no bookings yet.</p>";
+        return;
+      }
+
+      data.forEach(b => {
+        const card = document.createElement("div");
+        card.className = "booking-card";
+
+        const st = (b.payment_status || "Pending").toLowerCase();
+        const statusClass = st === "paid" ? "paid" : "pending";
+
+        const imgSrc = b.image1
+          ? `http://localhost:5000/images/${b.image1}`
+          : "https://via.placeholder.com/400x250?text=No+Image";
+
+        card.innerHTML = `
+          <img src="${imgSrc}" alt="Package Image">
+          <h3>${b.title || "Untitled Trip"}</h3>
+          <p><strong>Booking ID:</strong> ${b.id}</p>
+          <p><strong>📅 Date:</strong> ${b.booking_date ? new Date(b.booking_date).toLocaleString() : "—"}</p>
+          <p><strong>💳 Status:</strong> <span class="status ${statusClass}">${b.payment_status || "Pending"}</span></p>
+          <p><strong>📍 Location:</strong> ${b.location || "N/A"}</p>
+        `;
+        bookingsDiv.appendChild(card);
+      });
+    }
+
+    // ===========================
+    // Search Functionality
+    // ===========================
+    searchBtn.addEventListener("click", () => {
+      const query = searchInput.value.toLowerCase().trim();
+      if (!query) {
+        renderBookings(allBookings);
+        return;
+      }
+
+      const filtered = allBookings.filter(
+        b =>
+          b.title?.toLowerCase().includes(query) ||
+          b.location?.toLowerCase().includes(query)
+      );
+
+      renderBookings(filtered);
+    });
+
+    // ===========================
+    // Initial Load
+    // ===========================
+    fetchBookings();
+  </script>
+</body>
+</html>

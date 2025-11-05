@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Success</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #00c6ff, #0072ff, #4facfe);
+      background-size: 300% 300%;
+      animation: bgShift 8s ease infinite;
+      overflow: hidden;
+    }
+
+    @keyframes bgShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Frosted glass box */
+    .success-container {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border-radius: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
+      text-align: center;
+      padding: 50px 60px;
+      max-width: 420px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 1s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Ice shimmer */
+    .success-container::before {
+      content: "";
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, rgba(255,255,255,0.5), transparent, rgba(255,255,255,0.5));
+      transform: skewY(45deg);
+      opacity: 0;
+      transition: 0.8s ease-in-out;
+    }
+
+    .success-container:hover::before {
+      top: 100%;
+      opacity: 1;
+    }
+
+    .checkmark {
+      font-size: 80px;
+      color: #00ffcc;
+      animation: pop 0.8s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 0; }
+      80% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-top: 15px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+
+    p {
+      margin: 10px 0 25px;
+      color: #e0f7ff;
+      font-size: 15px;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(90deg, #00eaff, #0072ff);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0,255,255,0.6);
+    }
+
+    /* Floating particles (ice sparkle) */
+    .snowflake {
+      position: absolute;
+      top: -10px;
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+      animation: fall 10s linear infinite;
+    }
+
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="success-container">
+    <div class="checkmark">✅</div>
+    <h2>Payment Successful!</h2>
+    <p>Thank you for booking with <strong>Travalista Tours</strong>.<br>Your payment has been received successfully.</p>
+    <button onclick="window.location.href='mybookings.html'">View My Bookings</button>
+  </div>
+
+  <!-- ❄️ Floating ice particles -->
+  <script>
+    for (let i = 0; i < 25; i++) {
+      const snow = document.createElement("div");
+      snow.className = "snowflake";
+      snow.style.left = Math.random() * 100 + "vw";
+      snow.style.animationDuration = 5 + Math.random() * 5 + "s";
+      snow.textContent = "❄";
+      document.body.appendChild(snow);
+    }
+  </script>
+</body>
+</html>

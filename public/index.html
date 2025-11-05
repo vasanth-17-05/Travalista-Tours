@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travelista Tours Booking</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- 🌍 NAVIGATION -->
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travelista Tours</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- 🌍 NAVIGATION -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">Travelista Tours</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="packages.html">Packages</a></li>
+        <li><a href="db.html">DashBoard</a></li>
+        <li><a href="register.html">Register</a></li>
+      </ul>
+
+      <form class="search-bar">
+        <input type="text" placeholder="Search destinations..." id="searchInput">
+        <button type="submit">🔍</button>
+      </form>
+
+    </nav>
+  </header>
+  <hr>
+  <div class="hero-text">
+    <h1>Welcome to Luxury Travel Booking</h1>
+    <p>Book exclusive destinations and experiences designed for world-class travelers.</p>
+  </div>
+  <!-- 🌄 HERO SLIDESHOW -->
+  <div class="slideshow-container">
+    <div class="slide" onclick="goToPackage('bali')">
+      <img src="images/hero1.jpg" alt="Bali Luxury Tour">
+      <div class="caption">Bali Luxury Escape</div>
+    </div>
+
+    <div class="slide" onclick="goToPackage('dubai')">
+      <img src="images/hero2.jpg" alt="Dubai Gold Package">
+      <div class="caption"> Dubai Gold Experience</div>
+    </div>
+
+    <div class="slide" onclick="goToPackage('paris')">
+      <img src="images/hero3.jpg" alt="Paris Romance Tour">
+      <div class="caption"> Paris Romance Getaway</div>
+    </div>
+
+    <div class="slide" onclick="goToPackage('maldives')">
+      <img src="images/hero4.jpg" alt="Maldives Premium Resort">
+      <div class="caption"> Maldives Premium Resort</div>
+    </div>
+
+    <div class="slide" onclick="goToPackage('tokyo')">
+      <img src="images/hero5.jpg" alt="Tokyo Explorer">
+      <div class="caption"> Tokyo Explorer Package</div>
+    </div>
+  </div>
+
+  <!-- 🌅 INTRO TEXT -->
+  
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Travelista Tours | Designed by Vasanth Kumar</p>
+  </footer>
+
+  <script src="script.js">
+    // Redirect to package page
+function goToPackage(packageName) {
+  window.location.href = `packages.html?package=${packageName}`;
+}
+
+  </script>
+</body>
+</html>
+
+
+ 
+</body>
+</html>
