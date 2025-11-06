@@ -18,7 +18,6 @@
     background: radial-gradient(circle at top left, #b6f0ff 0%, #0e1f40 100%);
   }
 
-  /* Left Glacier Section */
   .left {
     flex: 1;
     background: url('public/bg.webp') center/cover no-repeat;
@@ -58,7 +57,6 @@
     color: #e8f7ff;
   }
 
-  /* Right Glacier Glass Section */
   .right {
     flex: 1;
     display: flex;
@@ -69,7 +67,6 @@
     position: relative;
   }
 
-  /* Floating Ice Particles */
   .right::before {
     content: "";
     position: absolute;
@@ -86,7 +83,6 @@
     100% { transform: translateY(40px) scale(1.1); }
   }
 
-  /* Glass Login Box */
   .login-box {
     background: rgba(255, 255, 255, 0.1);
     padding: 45px 35px;
@@ -178,7 +174,6 @@
     text-decoration: underline;
   }
 
-  /* Plane Animation */
   .fly-plane {
     position: absolute;
     left: 50%;
@@ -193,19 +188,35 @@
     100% { transform: translate(200%, -250%) rotate(360deg); opacity: 0; }
   }
 
-  /* Responsive */
+  /* ✅ Mobile view: make container slightly bigger */
   @media (max-width: 768px) {
     body {
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-    .left {
-      height: 40%;
-    }
+
     .right {
-      height: 60%;
+      flex: none;
+      width: 100%;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
     }
+
     .login-box {
-      width: 90%;
+      width: 92%;
+      max-width: 420px;  /* slightly larger */
+      padding: 55px 40px;
+    }
+
+    .login-box h2 {
+      font-size: 30px;
+    }
+
+    input, button {
+      font-size: 17px;
+      padding: 14px;
     }
   }
 </style>
