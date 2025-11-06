@@ -85,6 +85,53 @@
       font-size: 14px;
       padding: 20px 0;
     }
+
+    /* 📱 Mobile Responsive */
+    @media (max-width: 768px) {
+      .dashboard-container {
+        width: 95%;
+        padding: 20px;
+      }
+
+      .profile-pic {
+        width: 100px;
+        height: 100px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      .btn {
+        width: 90%;
+        font-size: 15px;
+      }
+
+      footer {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dashboard-container {
+        margin-top: 40px;
+        padding: 15px;
+      }
+
+      .profile-pic {
+        width: 90px;
+        height: 90px;
+      }
+
+      .btn {
+        width: 100%;
+        font-size: 14px;
+      }
+
+      footer {
+        padding: 15px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -92,11 +139,11 @@
     <img id="profilePic" class="profile-pic" src="images/profile.avif" alt="Profile Picture">
     <h2 id="userName">Guest User</h2>
 
-    <button class="btn" onclick="window.location.href='/mybookings.html'">MyBooking</button>
+    <button class="btn" onclick="window.location.href='mybookings.html'">📘 My Bookings</button>
     <button class="btn" onclick="showTerms()">📜 Terms & Conditions</button>
     <button class="btn" onclick="showAbout()">ℹ️ About</button>
     <button class="btn" onclick="showSettings()">⚙️ Settings</button>
-    <button id="authBtn" class="btn login-btn" onclick="logoutUser()" >🔐 Login</button>
+    <button id="authBtn" class="btn login-btn">🔐 Login</button>
   </div>
 
   <footer>© 2025 Travelista Tours</footer>
@@ -107,16 +154,16 @@
     const profilePic = document.getElementById("profilePic");
 
     // ===========================
-    // Check login session
+    // ✅ Check login session
     // ===========================
     async function checkLogin() {
       try {
-        const res = await fetch("http://localhost:5000/api/users/session", { credentials: "include" });
+        const res = await fetch("/api/users/session", { credentials: "include" });
         const data = await res.json();
 
         if (data.loggedIn) {
           userName.textContent = data.user.name || "Traveler";
-          profilePic.src = "images/profile.avif"; // You can replace with user's uploaded image
+          profilePic.src = "images/profile.avif";
           authBtn.textContent = "🚪 Logout";
           authBtn.classList.remove("login-btn");
           authBtn.classList.add("logout-btn");
@@ -126,7 +173,7 @@
           authBtn.textContent = "🔐 Login";
           authBtn.classList.remove("logout-btn");
           authBtn.classList.add("login-btn");
-          authBtn.onclick = () => (window.location.href = "/login");
+          authBtn.onclick = () => (window.location.href = "login.html");
         }
       } catch (err) {
         console.error("Error checking session:", err);
@@ -134,7 +181,33 @@
     }
 
     // ===========================
-    // Dummy functions
+    // ✅ Fixed Logout Function
+    // ===========================
+    async function logoutUser() {
+      try {
+        const res = await fetch("/api/users/logout", {
+          method: "POST", // ✅ Must be POST (backend expects POST)
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          alert("✅ Logged out successfully!");
+          window.location.href = "index.html"; // Redirect to home page
+        } else {
+          console.error("Logout failed:", data);
+          alert("⚠️ Logout failed. Please try again.");
+        }
+      } catch (err) {
+        console.error("Logout error:", err);
+        alert("❌ Error logging out. Please try again.");
+      }
+    }
+
+    // ===========================
+    // Info popups
     // ===========================
     function showAbout() {
       alert("🌍 Travelista Tours — Your trusted travel partner for exploring the world!");
@@ -145,20 +218,11 @@
     }
 
     function showSettings() {
-      alert("⚙️ Settings: This section will allow you to edit your preferences soon.");
+      alert("⚙️ Settings: You can edit preferences soon.");
     }
 
     // ===========================
-    // Logout Function
-    // ===========================
-    async function logoutUser() {
-      await fetch("http://localhost:5000/api/users/logout", { credentials: "include" });
-      localStorage.removeItem("userId");
-      window.location.reload();
-    }
-
-    // ===========================
-    // Initialize
+    // Initialize dashboard
     // ===========================
     checkLogin();
   </script>
