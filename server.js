@@ -36,10 +36,10 @@ app.use(
 // MySQL Connection
 // ==========================
 const db = mysql.createConnection({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASS || "Vasanth@05!!",
-  database: process.env.DB_NAME || "tb",
+  host: process.env.DB_HOST || "b3dgny3zcis2o17qqrbt-mysql.services.clever-cloud.com",
+  user: process.env.DB_USER || "ufihfaaq1rgiagxr",
+  password: process.env.DB_PASS || "xxCmYdWEmsDsH2L809ec",
+  database: process.env.DB_NAME || "b3dgny3zcis2o17qqrb",
 });
 
 db.connect((err) => {
@@ -443,3 +443,4 @@ app.use((_, res) => res.status(404).json({ message: "Route not found" }));
 app.listen(PORT, () =>
   console.log(`🚀 Server running on http://localhost:${PORT}`)
 );
+
