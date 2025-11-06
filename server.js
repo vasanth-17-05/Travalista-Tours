@@ -403,9 +403,20 @@ app.get("/api/users/session", (req, res) => {
 // Logout User
 // ==========================
 app.post("/api/users/logout", (req, res) => {
-  req.session.destroy(() => {
-    res.json({ message: "Logged out successfully" });
-  });
+  if (req.session) {
+    // Destroy the session
+    req.session.destroy(err => {
+      if (err) {
+        console.error("Error destroying session:", err);
+        return res.status(500).json({ success: false, message: "Failed to logout." });
+      }
+      // Clear cookie on browser
+      res.clearCookie("connect.sid", { path: "/" });
+      return res.json({ success: true, message: "Logged out successfully." });
+    });
+  } else {
+    return res.json({ success: true, message: "No active session." });
+  }
 });
 
 
