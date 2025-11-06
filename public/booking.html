@@ -11,6 +11,7 @@
       min-height: 100vh;
       display: flex;
       overflow: hidden;
+      flex-direction: row;
     }
 
     /* LEFT SIDE */
@@ -53,6 +54,7 @@
       border-radius: 10px;
       margin-top: 10px;
       box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+      font-size: 15px;
     }
 
     button {
@@ -112,6 +114,61 @@
       z-index: 1;
       border-radius: 20px;
     }
+
+    /* 🌍 MEDIA QUERIES */
+    @media (max-width: 1024px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 20px; }
+      #package-details { font-size: 14px; }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+        overflow-y: auto;
+      }
+
+      .left, .right {
+        width: 100%;
+        height: auto;
+      }
+
+      .left {
+        order: 2;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 20px 0;
+      }
+
+      .right {
+        order: 1;
+        height: 250px;
+      }
+
+      .slide {
+        position: relative;
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .booking-container {
+        width: 90%;
+        padding: 20px 15px;
+      }
+
+      button {
+        font-size: 15px;
+        padding: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 24px; }
+      h2 { font-size: 18px; }
+      #package-details { font-size: 13px; }
+      .booking-container { width: 95%; }
+    }
   </style>
 </head>
 <body>
@@ -139,10 +196,10 @@
       window.location.href = 'login.html';
     }
 
-    let pkg; // make package accessible globally
+    let pkg;
 
-    // Fetch package details
-    fetch(`http://localhost:5000/api/packages/${packageId}`)
+    // 🔗 Use relative path instead of localhost for Render
+    fetch(`/api/packages/${packageId}`)
       .then(res => res.json())
       .then(data => {
         pkg = data.package || data;
@@ -167,7 +224,6 @@
           slider.appendChild(image);
         });
 
-        // Auto-slide animation
         let current = 0;
         setInterval(() => {
           const slides = document.querySelectorAll('.slide');
@@ -182,9 +238,8 @@
         console.error(err);
       });
 
-    // ✅ Confirm booking and redirect to payment with full data
     function confirmBooking() {
-      fetch('http://localhost:5000/api/bookings/book', {
+      fetch('/api/bookings/book', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ user_id: userId, package_id: packageId })
