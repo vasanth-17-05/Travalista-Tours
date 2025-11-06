@@ -4,7 +4,7 @@ const db = mysql.createConnection({
   host: 'b3dgny3zcis2o17qqrbt-mysql.services.clever-cloud.com',
   user: 'ufihfaaq1rgiagxr',
   password: 'xxCmYdWEmsDsH2L809ec',
-  database: 'tb'
+  database: 'b3dgny3zcis2o17qqrb'
 });
 
 db.connect(err => {
@@ -13,6 +13,7 @@ db.connect(err => {
 });
 
 module.exports = db;
+
 
 
 
