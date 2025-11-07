@@ -15,11 +15,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ==========================
-// CORS CONFIGURATION (Render + Local Support)
+// 🌍 CORS CONFIGURATION (Allow Local + Render Frontend)
 // ==========================
 const allowedOrigins = [
   "http://localhost:5500", // local frontend testing
-  "https://travalista-tours-10.onrender.com" // your deployed frontend
+  "https://travalista-tours-10.onrender.com", // deployed frontend on Render
 ];
 
 app.use(
@@ -30,13 +30,13 @@ app.use(
 );
 
 // ==========================
-// Middleware
+// ⚙️ Middleware
 // ==========================
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // ==========================
-// MySQL Connection (Clever Cloud)
+// 🗄️ MySQL Connection (Clever Cloud)
 // ==========================
 const db = mysql.createConnection({
   host: process.env.DB_HOST || "bz8i1xizpodkv0h7nzhm-mysql.services.clever-cloud.com",
@@ -44,7 +44,7 @@ const db = mysql.createConnection({
   password: process.env.DB_PASS || "YbvFxdOLLMo10HwZy7qC",
   database: process.env.DB_NAME || "bz8i1xizpodkv0h7nzhm",
   port: process.env.DB_PORT || 3306,
-  ssl: { rejectUnauthorized: true },
+  ssl: { rejectUnauthorized: true }, // Required for Clever Cloud
 });
 
 db.connect((err) => {
@@ -53,7 +53,7 @@ db.connect((err) => {
 });
 
 // ==========================
-// Persistent Session Store
+// 🧠 Session Store (Persistent Login)
 // ==========================
 const sessionStore = new MySQLStore({
   host: process.env.DB_HOST,
@@ -71,7 +71,7 @@ app.use(
     saveUninitialized: false,
     store: sessionStore,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production", // HTTPS on Render
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 1000 * 60 * 60 * 24, // 1 day
     },
@@ -79,7 +79,7 @@ app.use(
 );
 
 // ==========================
-// USERS API
+// 👤 USER AUTH (Register + Login)
 // ==========================
 app.post("/api/users/register", (req, res) => {
   const { name, email, password } = req.body;
@@ -107,9 +107,9 @@ app.post("/api/users/login", (req, res) => {
 });
 
 // ==========================
-// OTP LOGIN
+// 🔐 OTP LOGIN (Send + Verify)
 // ==========================
-const otpStore = {}; // { email: { otp, expiresAt } }
+const otpStore = {}; // Temporary in-memory OTP store
 
 app.post("/api/users/send-otp", (req, res) => {
   const { email, password } = req.body;
@@ -138,13 +138,14 @@ app.post("/api/users/send-otp", (req, res) => {
     const mailOptions = {
       from: `"Travelista Tours" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: "Your Login OTP code",
+      subject: "🔐 Your OTP Code",
       html: `
-        <div style="font-family: Poppins, Arial; padding:15px; background:#f9f9f9; border-radius:10px;">
-          <h2 style="color:#007BFF;">🔐 OTP Verification</h2>
+        <div style="font-family:Poppins,Arial;padding:20px;background:#f9f9f9;border-radius:10px;">
+          <h2 style="color:#007BFF;">OTP Verification</h2>
           <p>Your one-time password (OTP) is:</p>
-          <h1 style="letter-spacing:3px; color:#333;">${otp}</h1>
+          <h1>${otp}</h1>
           <p>This code expires in <b>5 minutes</b>.</p>
+          <hr><p style="font-size:13px;color:#888;">© Travelista Tours</p>
         </div>`,
     };
 
@@ -163,14 +164,13 @@ app.post("/api/users/verify-otp", (req, res) => {
   const { email, otp } = req.body;
   const record = otpStore[email];
   if (!record) return res.status(400).json({ message: "❌ No OTP found" });
-  if (Date.now() > record.expiresAt) {
-    delete otpStore[email];
+  if (Date.now() > record.expiresAt)
     return res.status(401).json({ message: "❌ OTP expired" });
-  }
   if (String(record.otp) !== String(otp))
     return res.status(401).json({ message: "❌ Invalid OTP" });
 
   delete otpStore[email];
+
   const sql = "SELECT * FROM users WHERE email = ?";
   db.query(sql, [email], (err, results) => {
     if (err) return res.status(500).json(err);
@@ -190,7 +190,7 @@ app.post("/api/users/verify-otp", (req, res) => {
 });
 
 // ==========================
-// PACKAGES API
+// 🧳 PACKAGES API
 // ==========================
 app.get("/api/packages", (req, res) => {
   db.query("SELECT * FROM packages", (err, results) => {
@@ -200,7 +200,7 @@ app.get("/api/packages", (req, res) => {
 });
 
 // ==========================
-// BOOKINGS + PAYMENTS
+// 🧾 BOOKINGS + PAYMENTS
 // ==========================
 app.post("/api/bookings/book", (req, res) => {
   const user_id = req.session?.user?.id;
@@ -219,7 +219,7 @@ app.post("/api/bookings/book", (req, res) => {
 });
 
 // ==========================
-// Logout User
+// 🚪 LOGOUT
 // ==========================
 app.post("/api/users/logout", (req, res) => {
   if (req.session) {
@@ -234,20 +234,20 @@ app.post("/api/users/logout", (req, res) => {
 });
 
 // ==========================
-// FRONTEND ROUTES
+// 🌐 FRONTEND ROUTES
 // ==========================
 app.get("/", (_, res) =>
   res.sendFile(path.join(__dirname, "public", "index.html"))
 );
 
 // ==========================
-// 404 Fallback
+// 🚫 404 Fallback
 // ==========================
 app.use((_, res) => res.status(404).json({ message: "Route not found" }));
 
 // ==========================
-// Start Server
+// 🚀 Start Server
 // ==========================
-app.listen(PORT, () =>
-  console.log(`🚀 Server running on port ${PORT} (${process.env.NODE_ENV})`)
-);
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT} (${process.env.NODE_ENV})`);
+});
