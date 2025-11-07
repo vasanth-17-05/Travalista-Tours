@@ -2,20 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Payment Page - GlacierX</title>
+  <title>Payment Page</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
     body {
-      height: 100vh; display: flex; justify-content: center; align-items: center;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       background: radial-gradient(circle at top left, #a8e9ff, #0e1f40);
-      overflow: hidden; position: relative;
+      overflow: hidden;
+      position: relative;
     }
 
     body::before {
-      content: ""; position: absolute; inset: 0;
+      content: "";
+      position: absolute;
+      inset: 0;
       background: linear-gradient(-45deg, #5ddcff, #3c67e3, #4e00c2, #00c9ff);
-      background-size: 400% 400%; animation: moveBg 10s ease infinite; z-index: 0;
+      background-size: 400% 400%;
+      animation: moveBg 10s ease infinite;
+      z-index: 0;
     }
 
     @keyframes moveBg {
@@ -24,13 +39,20 @@
       100% { background-position: 0% 50%; }
     }
 
-    .box { position: relative; z-index: 5; width: 100%; height: 100%;
-      display: flex; justify-content: center; align-items: center; }
+    .box {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-    /* ✨ Frosted glass animated container */
     .payment-container {
       display: flex;
-      width: 800px; max-width: 95%;
+      width: 800px;
+      max-width: 95%;
       border-radius: 25px;
       overflow: hidden;
       position: relative;
@@ -56,7 +78,7 @@
       justify-content: center;
       padding: 40px;
       backdrop-filter: blur(15px);
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.25);
     }
 
     .amount-box h1 { font-size: 60px; margin-top: 10px; }
@@ -71,9 +93,21 @@
       color: white;
     }
 
-    .form-box h2 { margin-bottom: 20px; text-align: center; color: #fff; }
+    .form-box h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .tab-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
 
     .tab {
+      flex: 1;
+      text-align: center;
       padding: 10px 20px;
       border-radius: 30px;
       cursor: pointer;
@@ -93,7 +127,7 @@
     .payment-form { display: none; }
     .payment-form.active { display: block; animation: fadeIn 0.4s ease; }
 
-    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     input, select {
       width: 100%;
@@ -107,31 +141,78 @@
     }
 
     input::placeholder { color: rgba(255,255,255,0.8); }
-
     select option { color: #000; }
 
     button {
-      width: 100%; padding: 12px;
-      border: none; border-radius: 8px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
       background: linear-gradient(90deg, #00eaff, #0072ff);
-      color: white; font-size: 16px; font-weight: 600;
-      cursor: pointer; transition: 0.3s;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
     }
 
     button:hover { transform: scale(1.05); }
 
     .crystal {
       position: absolute;
-      width: 150px; height: 150px;
+      width: 150px;
+      height: 150px;
       border-radius: 50%;
       background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
       filter: blur(50px);
-      opacity: 0; transform: scale(0.6);
+      opacity: 0;
+      transform: scale(0.6);
       transition: 0.3s ease;
       z-index: 2;
     }
 
     body:hover .crystal { opacity: 1; transform: scale(1); }
+
+    @media (max-width: 768px) {
+      body {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+        background: linear-gradient(135deg, #0e1f40, #1e90ff);
+      }
+
+      .box { flex-direction: column; height: auto; padding: 15px 10px; }
+
+      .payment-container {
+        flex-direction: column;
+        width: 92%;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        padding: 10px;
+        margin-top: 20px;
+      }
+
+      .amount-box {
+        width: 100%;
+        padding: 20px 10px;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.35);
+        border-radius: 15px;
+        margin-bottom: 15px;
+      }
+
+      .form-box {
+        width: 100%;
+        padding: 20px 15px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 15px;
+      }
+
+      .tab-container { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; }
+      .tab { flex: 1; padding: 8px; border-radius: 8px; text-align: center; font-size: 15px; }
+    }
   </style>
 </head>
 
@@ -143,14 +224,15 @@
         <h3>Total Amount:</h3>
         <h1 id="amountDisplay">Loading...</h1>
       </div>
+
       <div class="form-box">
         <h2>Payment</h2>
-        <div style="display:flex;justify-content:center;margin-bottom:20px;">
+        <div class="tab-container">
           <div class="tab active" id="cardTab">💳 Card</div>
           <div class="tab" id="onlineTab">🌐 Online</div>
         </div>
 
-        <!-- Card Payment -->
+        <!-- CARD FORM -->
         <div id="cardForm" class="payment-form active">
           <input id="cardNumber" placeholder="Card Number" maxlength="16" inputmode="numeric">
           <div style="display:flex;gap:10px;">
@@ -160,7 +242,7 @@
           <button onclick="pay('card')">Pay Now</button>
         </div>
 
-        <!-- Online Payment -->
+        <!-- ONLINE FORM -->
         <div id="onlineForm" class="payment-form">
           <select id="method">
             <option>Select Method</option>
@@ -178,82 +260,91 @@
   </div>
 
   <script>
-    // ❄ Mouse follow
     const crystal = document.getElementById("crystal");
     document.addEventListener("mousemove", e => {
       crystal.style.left = e.pageX - 75 + "px";
       crystal.style.top = e.pageY - 75 + "px";
     });
 
-    // ✅ Get data from URL
     const params = new URLSearchParams(window.location.search);
     const price = parseFloat(params.get("price")) || 0;
-    const userId = params.get("user_id");
-    const packageId = params.get("package_id");
-    const bookingId = params.get("booking");
-
     document.getElementById("amountDisplay").textContent = `₹${price.toLocaleString()}`;
 
-    // Tabs
     const cardTab = document.getElementById("cardTab");
     const onlineTab = document.getElementById("onlineTab");
     const cardForm = document.getElementById("cardForm");
     const onlineForm = document.getElementById("onlineForm");
 
     cardTab.onclick = () => {
-      cardTab.classList.add("active"); onlineTab.classList.remove("active");
-      cardForm.classList.add("active"); onlineForm.classList.remove("active");
-    };
-    onlineTab.onclick = () => {
-      onlineTab.classList.add("active"); cardTab.classList.remove("active");
-      onlineForm.classList.add("active"); cardForm.classList.remove("active");
+      cardTab.classList.add("active");
+      onlineTab.classList.remove("active");
+      cardForm.classList.add("active");
+      onlineForm.classList.remove("active");
     };
 
-    // ✅ Payment Validation
+    onlineTab.onclick = () => {
+      onlineTab.classList.add("active");
+      cardTab.classList.remove("active");
+      onlineForm.classList.add("active");
+      cardForm.classList.remove("active");
+    };
+
+    // ✅ Validation + Payment
     function pay(type) {
       if (type === "card") {
-        const cardNumber = document.getElementById("cardNumber").value.trim();
+        const card = document.getElementById("cardNumber").value.trim();
         const expiry = document.getElementById("expiry").value.trim();
         const cvv = document.getElementById("cvv").value.trim();
 
-        if (!/^\d{16}$/.test(cardNumber)) return alert("⚠️ Enter a valid 16-digit card number!");
-        if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry)) return alert("⚠️ Enter expiry in MM/YY format!");
-        if (!/^\d{3}$/.test(cvv)) return alert("⚠️ Enter a valid 3-digit CVV!");
+        if (!/^\d{16}$/.test(card)) {
+          alert("⚠️ Card number must be exactly 16 digits.");
+          return;
+        }
+
+        if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry)) {
+          alert("⚠️ Expiry must be in MM/YY format.");
+          return;
+        }
+
+        if (!/^\d{3}$/.test(cvv)) {
+          alert("⚠️ CVV must be 3 digits.");
+          return;
+        }
+
+        alert("✅ Payment successful via Card!");
+        window.location.href = "payment-success.html";
       }
 
       if (type === "online") {
         const method = document.getElementById("method").value;
-        const account = document.getElementById("accountInput").value.trim();
-        if (method === "Select Method") return alert("⚠️ Please select a payment method!");
-        if (["GPay", "PhonePe", "Paytm", "UPI"].includes(method)) {
-          const upiRegex = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/;
-          if (!upiRegex.test(account)) return alert("⚠️ Enter a valid UPI ID (e.g., user@upi)");
-        }
-        if (method === "NetBanking") {
-          const valid = /^[A-Za-z\s]{3,30}$/.test(account) || /^\d{10,16}$/.test(account);
-          if (!valid) return alert("⚠️ Enter valid bank name or account number (10–16 digits)");
-        }
-      }
+        const acc = document.getElementById("accountInput").value.trim();
 
-      // Submit
-      fetch("http://localhost:5000/api/bookings/pay-and-book", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: userId,
-          package_id: packageId,
-          booking_id: bookingId,
-          amount: price,
-          payment_status: "Paid",
-          payment_method: type
-        }),
-      })
-      .then(res => res.json())
-      .then(() => {
-        alert("✅ Payment successful!");
+        if (method === "Select Method") {
+          alert("⚠️ Please select a payment method.");
+          return;
+        }
+
+        if (method === "UPI") {
+          const upiPattern = /^[\w.\-]{2,256}@[a-zA-Z]{2,64}$/;
+          if (!upiPattern.test(acc)) {
+            alert("⚠️ Enter a valid UPI ID (e.g., username@bank).");
+            return;
+          }
+        } else if (method === "NetBanking") {
+          if (!/^\d{9,18}$/.test(acc)) {
+            alert("⚠️ Enter a valid account number (9–18 digits).");
+            return;
+          }
+        } else if (["GPay", "PhonePe", "Paytm"].includes(method)) {
+          if (acc === "") {
+            alert(`⚠️ Enter your ${method} linked UPI ID or phone number.`);
+            return;
+          }
+        }
+
+        alert(`✅ Payment successful via ${method}!`);
         window.location.href = "payment-success.html";
-      })
-      .catch(() => alert("❌ Payment failed. Try again!"));
+      }
     }
   </script>
 </body>
