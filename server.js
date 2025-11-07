@@ -25,10 +25,10 @@ app.use(express.static(path.join(__dirname, "public")));
 // MySQL Connection
 // ==========================
 const db = mysql.createConnection({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASS || "Vasanth@05!!",
-  database: process.env.DB_NAME || "tb",
+  host: process.env.DB_HOST || "becc5ldbehpehggrrbna-mysql.services.clever-cloud.com",
+  user: process.env.DB_USER || "uvvmbgtg5bfvwuus",
+  password: process.env.DB_PASS || "xgzpymvK7YwYU0wbSbRx",
+  database: process.env.DB_NAME || "becc5ldbehpehggrrbna",
 });
 
 db.connect((err) => {
@@ -40,10 +40,10 @@ db.connect((err) => {
 // Persistent Session Store (✅ Added)
 // ==========================
 const sessionStore = new MySQLStore({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASS || "Vasanth@05!!",
-  database: process.env.DB_NAME || "tb",
+  host: process.env.DB_HOST || "becc5ldbehpehggrrbna-mysql.services.clever-cloud.com",
+  user: process.env.DB_USER || "uvvmbgtg5bfvwuus",
+  password: process.env.DB_PASS || "xgzpymvK7YwYU0wbSbRx",
+  database: process.env.DB_NAME || "becc5ldbehpehggrrbna",
 });
 
 app.use(
@@ -448,3 +448,4 @@ app.use((_, res) => res.status(404).json({ message: "Route not found" }));
 app.listen(PORT, () =>
   console.log(`🚀 Server running on http://localhost:${PORT}`)
 );
+
