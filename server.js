@@ -40,10 +40,10 @@ db.connect((err) => {
 // Persistent Session Store (✅ Added)
 // ==========================
 const sessionStore = new MySQLStore({
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASS || "Vasanth@05!!",
-  database: process.env.DB_NAME || "tb",
+    host: process.env.DB_HOST || "bve10i1d1emv4kdevx5i-mysql.services.clever-cloud.com",
+  user: process.env.DB_USER || "u3ygzqnjqt9kttzx",
+  password: process.env.DB_PASS || "bsAZ0E9nMFwYLmbZ9Owb",
+  database: process.env.DB_NAME || "bve10i1d1emv4kdevx5i",
 });
 
 app.use(
@@ -448,6 +448,7 @@ app.use((_, res) => res.status(404).json({ message: "Route not found" }));
 app.listen(PORT, () =>
   console.log(`🚀 Server running on http://localhost:${PORT}`)
 );
+
 
 
 
