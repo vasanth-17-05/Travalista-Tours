@@ -7,10 +7,10 @@ const mysql = require("mysql2");
 const isCloud = process.env.DB_HOST?.includes("clever-cloud");
 
 const dbConfig = {
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASS || "Vasanth@05!!",
-  database: process.env.DB_NAME || "tb",
+  host: process.env.DB_HOST || "bz8i1xizpodkv0h7nzhm-mysql.services.clever-cloud.com",
+  user: process.env.DB_USER || "uky18yu4nero38fe",
+  password: process.env.DB_PASS || "YbvFxdOLLMo10HwZy7qC",
+  database: process.env.DB_NAME || "bz8i1xizpodkv0h7nzhm",
   port: process.env.DB_PORT || 5000,
   ssl: isCloud ? { rejectUnauthorized: true } : false, // enable SSL for Clever Cloud
 };
@@ -28,4 +28,5 @@ db.connect((err) => {
 });
 
 module.exports = db;
+
 
