@@ -1,29 +1,30 @@
-const mysql = require('mysql2');
+// ==============================
+// db.js — MySQL Connection (Clever Cloud + Local Support)
+// ==============================
+require("dotenv").config();
+const mysql = require("mysql2");
 
-const db = mysql.createConnection({
-  host: 'bve10i1d1emv4kdevx5i-mysql.services.clever-cloud.com',
-  user: 'u3ygzqnjqt9kttzx',
-  password: 'bsAZ0E9nMFwYLmbZ9Owb',
-  database: 'u3ygzqnjqt9kttzx'
-});
+const isCloud = process.env.DB_HOST?.includes("clever-cloud");
 
-db.connect(err => {
-  if (err) throw err;
-  console.log('✅ MySQL Connected');
+const dbConfig = {
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASS || "Vasanth@05!!",
+  database: process.env.DB_NAME || "tb",
+  port: process.env.DB_PORT || 3306,
+  ssl: isCloud ? { rejectUnauthorized: true } : false, // enable SSL for Clever Cloud
+};
+
+const db = mysql.createConnection(dbConfig);
+
+db.connect((err) => {
+  if (err) {
+    console.error("❌ MySQL connection failed:", err.message);
+  } else {
+    console.log(
+      `✅ MySQL connected successfully to ${isCloud ? "Clever Cloud" : "Localhost"}`
+    );
+  }
 });
 
 module.exports = db;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
