@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>My Bookings - Travelista Tours</title>
   <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     * { box-sizing: border-box; }
 
@@ -37,8 +38,48 @@
       100% { background-position: 0% 50%; }
     }
 
+    /* 🌟 Navbar Styling */
+    .navbar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(15px);
+      z-index: 10;
+    }
+
+    .navbar h1 {
+      font-size: 22px;
+      margin: 0;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #00c9ff;
+      text-shadow: 0 0 10px rgba(0,201,255,0.8);
+    }
+
     h2 {
-      margin-top: 60px;
+      margin-top: 100px; /* Adjusted for navbar height */
       font-size: 32px;
       text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
     }
@@ -53,7 +94,7 @@
 
     .search-bar input {
       padding: 10px 15px;
-      width: 280px;
+      width: 220px;
       border: none;
       border-radius: 8px;
       outline: none;
@@ -129,9 +170,33 @@
       color: #ffd4d4;
       margin-top: 20px;
     }
+
+    /* 📱 Mobile Responsive */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .nav-links a {
+        font-size: 14px;
+      }
+      h2 {
+        font-size: 26px;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <!-- 🌐 Navbar -->
+  <nav class="navbar">
+    <h1>Travelista Tours</h1>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="db.html">Dashboard</a>
+    </div>
+  </nav>
+
   <h2>🧳 My Bookings</h2>
 
   <!-- 🔍 Search Bar -->
@@ -151,9 +216,6 @@
 
     let allBookings = [];
 
-    // ===========================
-    // Fetch Bookings
-    // ===========================
     async function fetchBookings() {
       try {
         let res = await fetch("http://localhost:5000/api/bookings/user", {
@@ -178,9 +240,6 @@
       }
     }
 
-    // ===========================
-    // Render Bookings
-    // ===========================
     function renderBookings(data) {
       bookingsDiv.innerHTML = "";
       if (!Array.isArray(data) || data.length === 0) {
@@ -211,9 +270,6 @@
       });
     }
 
-    // ===========================
-    // Search Functionality
-    // ===========================
     searchBtn.addEventListener("click", () => {
       const query = searchInput.value.toLowerCase().trim();
       if (!query) {
@@ -230,9 +286,6 @@
       renderBookings(filtered);
     });
 
-    // ===========================
-    // Initial Load
-    // ===========================
     fetchBookings();
   </script>
 </body>
