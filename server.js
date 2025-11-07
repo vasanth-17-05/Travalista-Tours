@@ -9,6 +9,7 @@ const path = require("path");
 const mysql = require("mysql2");
 const nodemailer = require("nodemailer");
 const session = require("express-session");
+const MySQLStore = require("express-mysql-session")(session); // ✅ Added
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,31 +22,39 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // ==========================
-// Session
-// ==========================
-app.use(
-  session({
-    secret: "travelista-secret-key",
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 },
-  })
-);
-
-// ==========================
 // MySQL Connection
 // ==========================
 const db = mysql.createConnection({
-  host: process.env.DB_HOST || "bvlq1iclre53b4deo5gk-mysql.services.clever-cloud.com",
-  user: process.env.DB_USER || "ye9n3g4zzjwlghy",
-  password: process.env.DB_PASS || "s9l6ETeWb9v2PMMKt8w4",
-  database: process.env.DB_NAME || "bvlq1iclre53b4deo5gk",
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASS || "Vasanth@05!!",
+  database: process.env.DB_NAME || "tb",
 });
 
 db.connect((err) => {
   if (err) console.error("❌ MySQL connection failed:", err);
   else console.log("✅ MySQL connected successfully");
 });
+
+// ==========================
+// Persistent Session Store (✅ Added)
+// ==========================
+const sessionStore = new MySQLStore({
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASS || "Vasanth@05!!",
+  database: process.env.DB_NAME || "tb",
+});
+
+app.use(
+  session({
+    secret: "travelista-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore,
+    cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 },
+  })
+);
 
 // ==========================
 // USERS API
@@ -381,11 +390,9 @@ app.get("/api/bookings/image/:bookingId", (req, res) => {
     res.json(data);
   });
 });
-   
-
 
 // ==========================
-// Check session status (NEW)
+// Check session status
 // ==========================
 app.get("/api/users/session", (req, res) => {
   if (req.session && req.session.user) {
@@ -398,19 +405,18 @@ app.get("/api/users/session", (req, res) => {
   }
 });
 
-
 // ==========================
 // Logout User
 // ==========================
 app.post("/api/users/logout", (req, res) => {
   if (req.session) {
-    // Destroy the session
-    req.session.destroy(err => {
+    req.session.destroy((err) => {
       if (err) {
         console.error("Error destroying session:", err);
-        return res.status(500).json({ success: false, message: "Failed to logout." });
+        return res
+          .status(500)
+          .json({ success: false, message: "Failed to logout." });
       }
-      // Clear cookie on browser
       res.clearCookie("connect.sid", { path: "/" });
       return res.json({ success: true, message: "Logged out successfully." });
     });
@@ -418,7 +424,6 @@ app.post("/api/users/logout", (req, res) => {
     return res.json({ success: true, message: "No active session." });
   }
 });
-
 
 // ==========================
 // FRONTEND ROUTES
