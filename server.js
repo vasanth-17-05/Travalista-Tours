@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const db = mysql.createConnection({
   host: process.env.DB_HOST || "bvlq1iclre53b4deo5gk-mysql.services.clever-cloud.com",
   user: process.env.DB_USER || "uye9n3g4zzjwlghy",
-  password: process.env.DB_PASS || "Vasanth@05!!",
+  password: process.env.DB_PASS || "s9l6ETeWb9v2PMMKt8w4",
   database: process.env.DB_NAME || "bvlq1iclre53b4deo5gk",
 });
 
@@ -448,6 +448,7 @@ app.use((_, res) => res.status(404).json({ message: "Route not found" }));
 app.listen(PORT, () =>
   console.log(`🚀 Server running on http://localhost:${PORT}`)
 );
+
 
 
 
