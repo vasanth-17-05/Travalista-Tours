@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Booking Confirmation - Travelista Tours</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: "Poppins", sans-serif;
@@ -12,18 +13,79 @@
       display: flex;
       overflow: hidden;
       flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      /* reserve space for fixed navbar so it doesn't overlap content */
+      padding-top: 72px;
+      box-sizing: border-box;
+    }
+
+    /* 🌐 Navbar (adjusted alignment + spacing) */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 64px;
+      background: rgba(0, 0, 0, 0.44);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 36px;
+      z-index: 100;
+      box-sizing: border-box;
+    }
+
+    .navbar .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .navbar h1 {
+      color: #fff;
+      font-size: 20px;
+      margin: 0;
+      line-height: 1;
+      letter-spacing: 0.2px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: color 0.25s ease, transform 0.15s ease;
+      padding: 6px 8px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    .nav-links a:hover {
+      color: #00c6ff;
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.03);
     }
 
     /* LEFT SIDE */
     .left {
-      width: 45%;
+      width: 43%;
       display: flex;
       justify-content: center;
       align-items: center;
       backdrop-filter: blur(15px);
       background: rgba(255, 255, 255, 0.08);
       box-shadow: inset 0 0 20px rgba(255,255,255,0.1);
-      z-index: 2;
+      border-radius: 20px;
+      margin: 20px;
+      height: 75vh; /* slightly shorter vertically */
     }
 
     .booking-container {
@@ -77,27 +139,31 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
-    /* RIGHT SIDE SLIDER */
+    /* RIGHT SIDE SLIDER - Desktop Container Style */
     .right {
-      width: 55%;
-      height: 100vh;
+      width: 55%; /* slightly extended horizontally */
+      height: 75vh; /* slightly shorter vertically */
       position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      background: rgba(255,255,255,0.15);
+      margin: 20px;
+      backdrop-filter: blur(15px);
     }
 
     .slide {
       position: absolute;
-      max-width: 85%;
-      max-height: 80%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
       opacity: 0;
       transform: scale(1.05);
-      transition: all 1.5s ease-in-out;
+      transition: all 1s ease-in-out;
     }
 
     .slide.active {
@@ -110,46 +176,78 @@
       position: absolute;
       inset: 0;
       background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(15px);
+      backdrop-filter: blur(10px);
       z-index: 1;
       border-radius: 20px;
     }
 
-    /* 🌍 MEDIA QUERIES */
-    @media (max-width: 1024px) {
-      h1 { font-size: 28px; }
-      h2 { font-size: 20px; }
-      #package-details { font-size: 14px; }
-    }
-
+    /* 🌍 MOBILE VIEW */
     @media (max-width: 768px) {
       body {
         flex-direction: column;
         overflow-y: auto;
+        align-items: stretch;
+        padding-top: 96px; /* more vertical space for stacked navbar */
       }
 
-      .left, .right {
-        width: 100%;
+      .navbar {
         height: auto;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 18px;
+        gap: 6px;
       }
 
-      .left {
-        order: 2;
-        background: rgba(0, 0, 0, 0.3);
-        padding: 20px 0;
+      .navbar .brand {
+        justify-content: center;
+      }
+
+      .navbar h1 {
+        font-size: 18px;
+      }
+
+      .nav-links {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .nav-links a {
+        font-size: 13px;
+        margin: 4px 6px;
+        padding: 6px 10px;
       }
 
       .right {
         order: 1;
+        width: 100%;
         height: 250px;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: none;
       }
 
       .slide {
-        position: relative;
-        max-width: 100%;
-        max-height: 100%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         border-radius: 0;
+      }
+
+      .overlay {
+        display: none;
+      }
+
+      .left {
+        order: 2;
+        width: 100%;
+        height: auto;
+        background: rgba(0, 0, 0, 0.3);
         box-shadow: none;
+        border-radius: 0;
+        margin: 0;
+        padding: 20px 0;
       }
 
       .booking-container {
@@ -157,22 +255,37 @@
         padding: 20px 15px;
       }
 
+      h1 { font-size: 26px; }
+      h2 { font-size: 18px; }
+      #package-details { font-size: 13px; }
+
       button {
         font-size: 15px;
         padding: 10px;
       }
     }
-
-    @media (max-width: 480px) {
-      h1 { font-size: 24px; }
-      h2 { font-size: 18px; }
-      #package-details { font-size: 13px; }
-      .booking-container { width: 95%; }
-    }
   </style>
 </head>
-<body>
 
+<body>
+  <!-- ✅ Navbar -->
+  <div class="navbar">
+    <div class="brand">
+      <h1>Travelista</h1>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="packages.html">Packages</a>
+      <a href="db.html">DashBoard</a>
+    </div>
+  </div>
+
+  <!-- ✅ RIGHT SIDE -->
+  <div class="right" id="hero-slider">
+    <div class="overlay"></div>
+  </div>
+
+  <!-- ✅ LEFT SIDE -->
   <div class="left">
     <div class="booking-container">
       <h1>Travelista Tours</h1>
@@ -180,10 +293,6 @@
       <div id="package-details">Loading package details...</div>
       <button onclick="confirmBooking()">Confirm Booking</button>
     </div>
-  </div>
-
-  <div class="right" id="hero-slider">
-    <div class="overlay"></div>
   </div>
 
   <script>
@@ -197,8 +306,8 @@
     }
 
     let pkg;
+    let current = 0;
 
-    // 🔗 Use relative path instead of localhost for Render
     fetch(`/api/packages/${packageId}`)
       .then(res => res.json())
       .then(data => {
@@ -216,6 +325,7 @@
         const slider = document.getElementById('hero-slider');
         const images = [pkg.image1, pkg.image2, pkg.image3, pkg.image4, pkg.image5].filter(img => img);
 
+        // Add images dynamically
         images.forEach((img, i) => {
           const image = document.createElement('img');
           image.src = `images/${img}`;
@@ -224,17 +334,43 @@
           slider.appendChild(image);
         });
 
-        let current = 0;
-        setInterval(() => {
+        // Auto slideshow
+        if (images.length > 1) {
+          setInterval(() => {
+            const slides = document.querySelectorAll('.slide');
+            slides[current].classList.remove('active');
+            current = (current + 1) % slides.length;
+            slides[current].classList.add('active');
+          }, 4000);
+        }
+
+        // Swipe support for mobile
+        let startX = 0, endX = 0;
+        const sliderElement = document.getElementById('hero-slider');
+
+        sliderElement.addEventListener('touchstart', e => {
+          startX = e.touches[0].clientX;
+        });
+
+        sliderElement.addEventListener('touchend', e => {
+          endX = e.changedTouches[0].clientX;
+          handleSwipe();
+        });
+
+        function handleSwipe() {
+          const diff = startX - endX;
           const slides = document.querySelectorAll('.slide');
           slides[current].classList.remove('active');
-          current = (current + 1) % slides.length;
+
+          if (diff > 50) current = (current + 1) % slides.length; // next
+          else if (diff < -50) current = (current - 1 + slides.length) % slides.length; // prev
+
           slides[current].classList.add('active');
-        }, 4000);
+        }
       })
       .catch(err => {
         document.getElementById('package-details').innerHTML =
-          "<p style='color:red;'>Error loading package details. Please try again later.</p>";
+          "<p style='color:red;'>❌ Error loading package details. Please try again later.</p>";
         console.error(err);
       });
 
