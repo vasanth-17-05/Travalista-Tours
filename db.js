@@ -11,7 +11,7 @@ const dbConfig = {
   user: process.env.DB_USER || "root",
   password: process.env.DB_PASS || "Vasanth@05!!",
   database: process.env.DB_NAME || "tb",
-  port: process.env.DB_PORT || 3306,
+  port: process.env.DB_PORT || 5000,
   ssl: isCloud ? { rejectUnauthorized: true } : false, // enable SSL for Clever Cloud
 };
 
@@ -28,3 +28,4 @@ db.connect((err) => {
 });
 
 module.exports = db;
+
